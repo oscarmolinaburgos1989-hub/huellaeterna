@@ -514,3 +514,192 @@ un santuario virtual de amor y respeto
     <script src="js/script.js"></script>
 </body>
 </html>
+[style.css](https://github.com/user-attachments/files/22938440/style.css)
+
+/* Minimal additional styles to preserve original animations and utilities */
+.hero-bg {
+    background-image: url('img/hero-bg.svg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+.fade-in {
+    animation: fadeIn 0.8s ease-in-out;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.pulse-gentle {
+    animation: pulseGentle 2s infinite;
+}
+@keyframes pulseGentle {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+.bounce-in {
+    animation: bounceIn 0.6s ease-out;
+}
+@keyframes bounceIn {
+    0% { opacity: 0; transform: translateY(30px); }
+    60% { opacity: 1; transform: translateY(-5px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+.glow-hover:hover {
+    box-shadow: 0 0 20px rgba(217, 119, 6, 0.3);
+}
+![cat1](https://github.com/user-attachments/assets/673f7475-4c06-47eb-950d-c560f29bfb69)
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="100%" height="100%" fill="#f7f7fb"/><circle cx="100" cy="90" r="40" fill="#f59e0b"/><path d="M60 130c25-30 70-30 80 0v30H60z" fill="#d97706"/></svg>
+[script.js](https://github.com/user-attachments/files/22938464/script.js)
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Smooth nav scroll (for anchor links)
+    const links = document.querySelectorAll('a[href^="#"]');
+    links.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetSection = document.querySelector(targetId);
+            if (targetSection) {
+                targetSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+
+    // Gallery filters
+    const filterButtons = document.querySelectorAll('#galeria .flex button');
+    const galleryItems = document.querySelectorAll('#galeria [data-category]');
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            filterButtons.forEach(btn => {
+                btn.classList.remove('bg-primary', 'text-white');
+                btn.classList.add('text-gray-600');
+            });
+            this.classList.add('bg-primary', 'text-white');
+            this.classList.remove('text-gray-600');
+
+            const category = this.textContent.trim().toLowerCase();
+            galleryItems.forEach(item => {
+                const itemCat = item.getAttribute('data-category') || '';
+                if (category === 'todos' || itemCat === category) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Testimonial carousel
+    const testimonials = [
+        {
+            name: 'María González',
+            pet: 'Con Max, su Golden Retriever',
+            image: 'img/dog1.svg',
+            text: 'Gracias a Huella Eterna, siento que Max sigue conmigo cada día. El memorial digital que crearon capturó perfectamente su esencia alegre y juguetona. Cada vez que lo veo, sonrío recordando todos los momentos hermosos que compartimos juntos.'
+        },
+        {
+            name: 'Carlos Mendoza',
+            pet: 'Con Luna, su gata persa',
+            image: 'img/cat1.svg',
+            text: 'Luna fue mi compañera durante 15 años. Cuando la perdí, pensé que nunca podría superar el dolor. Huella Eterna me ayudó a crear un homenaje que celebra su vida y me trae paz cada día.'
+        },
+        {
+            name: 'Ana Rodríguez',
+            pet: 'Con Rocky, su labrador',
+            image: 'img/dog2.svg',
+            text: 'El servicio fue excepcional. No solo crearon un memorial hermoso para Rocky, sino que me acompañaron en todo el proceso con mucha sensibilidad.'
+        }
+    ];
+
+    let currentTestimonial = 0;
+    const testimonialContainer = document.querySelector('.testimonial-slide');
+    const dots = document.querySelectorAll('#testimonios button');
+
+    function updateTestimonial(index) {
+        const testimonial = testimonials[index];
+        testimonialContainer.innerHTML = `
+            <div class="flex items-center mb-6">
+                <img src="${testimonial.image}" alt="${testimonial.name}" class="w-16 h-16 rounded-full object-cover object-top mr-4">
+                <div>
+                    <h3 class="font-medium text-gray-900">${testimonial.name}</h3>
+                    <p class="text-gray-600">${testimonial.pet}</p>
+                </div>
+            </div>
+            <blockquote class="text-lg text-gray-700 italic leading-relaxed">
+                "${testimonial.text}"
+            </blockquote>
+        `;
+        dots.forEach((dot, i) => {
+            if (i === index) {
+                dot.classList.add('bg-primary');
+                dot.classList.remove('bg-gray-300');
+            } else {
+                dot.classList.add('bg-gray-300');
+                dot.classList.remove('bg-primary');
+            }
+        });
+    }
+
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            currentTestimonial = index;
+            updateTestimonial(currentTestimonial);
+        });
+    });
+
+    setInterval(() => {
+        currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+        updateTestimonial(currentTestimonial);
+    }, 5000);
+
+    // File upload area
+    const uploadArea = document.querySelector('#contacto .border-dashed');
+    const fileInput = document.querySelector('#fileInput');
+
+    if (uploadArea) {
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('border-primary', 'bg-primary', 'bg-opacity-5');
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('border-primary', 'bg-primary', 'bg-opacity-5');
+        });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('border-primary', 'bg-primary', 'bg-opacity-5');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                updateUploadText(files[0].name);
+            }
+        });
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) updateUploadText(e.target.files[0].name);
+        });
+    }
+
+    function updateUploadText(fileName) {
+        const textElement = document.querySelector('#contacto .border-dashed p');
+        if (textElement) textElement.textContent = `Archivo seleccionado: ${fileName}`;
+    }
+
+    // Simple form validation + UX
+    const form = document.querySelector('#contactForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            // basic check: ensure required fields are filled (HTML also enforces)
+            const name = form.querySelector('[name="name"]').value.trim();
+            const email = form.querySelector('[name="email"]').value.trim();
+            const message = form.querySelector('[name="message"]').value.trim();
+            if (!name || !email || !message) {
+                e.preventDefault();
+                alert('Por favor completa los campos obligatorios: Nombre, Email y Mensaje.');
+                return false;
+            }
+            // Let the form submit to formsubmit.co (or change action to Formspree if you set it up)
+        });
+    }
+});
